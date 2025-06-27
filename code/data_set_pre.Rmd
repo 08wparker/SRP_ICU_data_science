@@ -6,7 +6,12 @@ output: html_notebook
 # Load required libraries
 
 ```{r}
+# for data manipulation
 library(tidyverse)
+
+
+# for managing file paths
+library(here)
 ```
 
 # Load the data
@@ -40,6 +45,5 @@ data <- data %>%
 data %>%
   count(outcome)
 
-library(here)
 write.csv(data, here("data", "raw_dataset.csv") )
 ```
