@@ -1,0 +1,41 @@
+---
+title: "Data set prep"
+output: html_notebook
+---
+
+# Load required libraries
+
+```{r}
+library(tidyverse)
+```
+
+# Load the data
+
+```{r}
+#simulate a dataset as an example. outcome is a binary with 5 different clinical predictors
+set.seed(123)
+
+n <- 1000
+
+## simulate a dataset. There are 1500 patients. The outcome is binary, and there are 5 covariates (age, creatinine, diabetes, BMI, and smoking status)
+set.seed(123)
+data <- tibble(
+  patient_id = 1:1500,
+  age = rnorm(1500, mean = 50, sd = 10),
+  creatinine = rnorm(1500, mean = 1.0, sd = 0.2),
+  diabetes = sample(c(0, 1), 1500, replace = TRUE),
+  BMI = rnorm(1500, mean = 25, sd = 5),
+  smoking_status = sample(c("non-smoker", "smoker"), 1500, replace = TRUE)
+)
+
+# create a noisy binary outcome variable
+data <- data %>%
+  mutate(risk = age + creatinine + diabetes * 2 + BMI - ifelse(smoking_status == "smoker", 1, 0),
+         # add some noise to the risk score
+         risk = risk + rnorm(1500, mean = 0, sd = 5),
+         # create a binary outcome based on the risk score
+         outcome = ifelse(risk > quantile(risk, 0.48), 1, 0))
+
+data %>%
+  count(outcome)
+```
