@@ -24,13 +24,14 @@ data <- tibble(
   age = rnorm(1500, mean = 50, sd = 10),
   creatinine = rnorm(1500, mean = 1.0, sd = 0.2),
   diabetes = sample(c(0, 1), 1500, replace = TRUE),
-  BMI = rnorm(1500, mean = 25, sd = 5),
+  # add weight
+  weight = rnorm(1500, mean =75, sd = 20),
   smoking_status = sample(c("non-smoker", "smoker"), 1500, replace = TRUE)
 )
 
 # create a noisy binary outcome variable
 data <- data %>%
-  mutate(risk = age + creatinine + diabetes * 2 + BMI - ifelse(smoking_status == "smoker", 1, 0),
+  mutate(risk = age + creatinine + diabetes * 2 + weight - ifelse(smoking_status == "smoker", 1, 0),
          # add some noise to the risk score
          risk = risk + rnorm(1500, mean = 0, sd = 5),
          # create a binary outcome based on the risk score
